@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+
+<body>
+  <script>
+
+  //Get Handle
+  var str = window.location.href;
+  var pos = str.indexOf("com/");
+ // document.write(pos+4); //Using document.write() after an HTML document is loaded, will delete all existing HTML:
+  var InstaHandle = str.slice(pos+4);
+  window.location.replace("https://thereisnoearthb.org/"+InstaHandle );
+  //document.write(InstaHandle);
+
+  </script>
+
+
+</body>
+
+</html>
+
+
+<!--<meta http-equiv="Refresh" content="0; url=https://thereisnoearthb.com/fundraiser.html" />
+-->
