@@ -10,18 +10,22 @@
 }
 
 body {
-  background-color: var(--bgColor);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensures the body takes up at least the full height of the viewport */
+  margin: 0; /* Removes default body margin for better alignment */
 }
 
-.footer {
-  /* position: fixed; */
-  left: 0;
-  bottom: 0;
+main {
+  flex: 1;
+}
+
+footer {
   width: 100%;
   color: black;
   background-color: #e1d3b6;
   text-align: center;
-  opacity: 100%;
+  flex-shrink: 0;
 }
 
 #userPhoto {
