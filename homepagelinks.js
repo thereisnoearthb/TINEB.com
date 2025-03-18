@@ -1,7 +1,11 @@
 function fetchLinks() {
   const cacheKey = "cachedLinks";
-  const cacheTimeKey = "cachedLinks_time"; // Time key to store when data was first cached
+  const cacheTimeKey = "cachedLinks_time";
   const cacheTTL = 60 * 60 * 1000; // 1-hour cache expiration
+  const loader = document.getElementById("loader"); // Get spinner
+
+  // Show loading spinner
+  loader.style.display = "block";
 
   // Check cache
   const cachedData = localStorage.getItem(cacheKey);
@@ -39,7 +43,10 @@ function handleJSONPResponse(links) {
 
 function displayLinks(links) {
   const linkContainer = document.getElementById("links");
+  const loader = document.getElementById("loader"); // Get spinner element
+
   linkContainer.innerHTML = "";
+  loader.style.display = "none"; // Hide spinner
 
   links.forEach((link) => {
     const anchor = document.createElement("a");
