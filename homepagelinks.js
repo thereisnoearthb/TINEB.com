@@ -1,59 +1,44 @@
 function fetchLinks() {
-  const cacheKey = "cachedLinks";
-  const cacheTimeKey = "cachedLinks_time";
-  const cacheTTL = 60 * 60 * 1000; // 1-hour cache expiration
-  const loader = document.getElementById("loader"); // Get spinner
+  const sheetId = "1WyjAf3siIsdlt35t__sw9cOBjVRjX9SOY4lJOw7TsS4";
+  const apiKey = "API_KEY"
+  const range = "links!A:C"; // Data is in columns A (text), B (href), C (target)
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
-  // Show loading spinner
-  loader.style.display = "block";
+  const loader = document.getElementById("loader"); // Get loading spinner element
+  loader.style.display = "block"; // Show loading spinner
 
-  // Check cache
-  const cachedData = localStorage.getItem(cacheKey);
-  const cachedTimestamp = Number(localStorage.getItem(cacheTimeKey));
-
-  if (
-    cachedData &&
-    cachedTimestamp &&
-    Date.now() - cachedTimestamp < cacheTTL
-  ) {
-    console.log("Using cached JSONP data");
-    displayLinks(JSON.parse(cachedData));
-    return;
-  }
-
-  console.log("Fetching new JSONP data...");
-
-  // Create script element for JSONP request
-  const script = document.createElement("script");
-  script.src =
-    "https://script.google.com/macros/s/AKfycbxgJBDGdCWLrOBFQMl2bfTXyE6YoytlFA2GHZ5x_XRLY3bjX1l4YpRaqG8H6EXa2TrE/exec?callback=handleJSONPResponse";
-  document.body.appendChild(script);
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      loader.style.display = "none"; // Hide spinner
+      if (data.values) {
+        displayLinks(data.values);
+      } else {
+        console.error("No data found in the sheet.");
+      }
+    })
+    .catch((error) => {
+      loader.style.display = "none"; // Hide spinner
+      console.error("Error fetching data:", error);
+      const linkContainer = document.getElementById("links");
+      linkContainer.textContent = "Error fetching data.";
+    });
 }
 
-// Callback function to handle JSONP response
-function handleJSONPResponse(links) {
-  console.log("Fetched new JSONP data:", links);
-
-  // Cache the data
-  localStorage.setItem("cachedLinks", JSON.stringify(links));
-  localStorage.setItem("cachedLinks_time", Date.now());
-
-  displayLinks(links);
-}
-
-function displayLinks(links) {
+function displayLinks(rows) {
   const linkContainer = document.getElementById("links");
-  const loader = document.getElementById("loader"); // Get spinner element
+  linkContainer.innerHTML = ""; // Clear existing links
 
-  linkContainer.innerHTML = "";
-  loader.style.display = "none"; // Hide spinner
+  rows.slice(1).forEach((row) => {
+    const text = row[0];
+    const href = row[1];
+    const target = row[2] || "_blank"; // Default to _blank if missing
 
-  links.forEach((link) => {
     const anchor = document.createElement("a");
     anchor.className = "link";
-    anchor.href = link.href;
-    anchor.target = link.target;
-    anchor.textContent = link.text;
+    anchor.href = href;
+    anchor.target = target;
+    anchor.textContent = text;
     anchor.style.display = "block";
 
     linkContainer.appendChild(anchor);
