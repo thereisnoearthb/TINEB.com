@@ -1,6 +1,6 @@
 function fetchLinks() {
   const sheetId = "1WyjAf3siIsdlt35t__sw9cOBjVRjX9SOY4lJOw7TsS4";
-  const apiKey = "API_KEY"
+  const apiKey = import.meta.env.VITE_GOOGLE_API_KEY; // Use injected API key
   const range = "links!A:C"; // Data is in columns A (text), B (href), C (target)
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
@@ -20,8 +20,7 @@ function fetchLinks() {
     .catch((error) => {
       loader.style.display = "none"; // Hide spinner
       console.error("Error fetching data:", error);
-      const linkContainer = document.getElementById("links");
-      linkContainer.textContent = "Error fetching data.";
+      document.getElementById("links").textContent = "Error fetching data.";
     });
 }
 
